@@ -11,9 +11,9 @@
                 <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
                     <div class="px-6 pt-4 pb-2">
                         @if (request('search'))
-                        <h2 class="text-xl font-semibold text-white mb-2">
-                            Search results for : <span class="font-bold">{{ request('search') }}</span>
-                        </h2>
+                            <h2 class="text-xl font-semibold text-white mb-2">
+                                Search results for : <span class="font-bold">{{ request('search') }}</span>
+                            </h2>
                         @endif
 
                         <form class="flex items-center gap-4 mb-4">
@@ -32,19 +32,19 @@
 
                             <div>
                                 @if (session('success'))
-                                <p x-data="{ show: true }" x-show="show" x-transition
-                                    x-init="setTimeout(() => show = false, 5000)"
-                                    class="pb-3 text-sm text-green-600 dark:text-green-400">
-                                    {{ session('success') }}
-                                </p>
+                                    <p x-data="{ show: true }" x-show="show" x-transition
+                                        x-init="setTimeout(() => show = false, 5000)"
+                                        class="pb-3 text-sm text-green-600 dark:text-green-400">
+                                        {{ session('success') }}
+                                    </p>
                                 @endif
 
                                 @if (session('danger'))
-                                <p x-data="{ show: true }" x-show="show" x-transition
-                                    x-init="setTimeout(() => show = false, 5000)"
-                                    class="pb-3 text-sm text-red-600 dark:text-red-400">
-                                    {{ session('danger') }}
-                                </p>
+                                    <p x-data="{ show: true }" x-show="show" x-transition
+                                        x-init="setTimeout(() => show = false, 5000)"
+                                        class="pb-3 text-sm text-red-600 dark:text-red-400">
+                                        {{ session('danger') }}
+                                    </p>
                                 @endif
                             </div>
                         </div>
@@ -74,35 +74,62 @@
                         </thead>
                         <tbody>
                             @forelse ($users as $data)
-                            <tr class="odd:bg-white odd:dark:bg-gray-800 even:bg-gray-50 even:dark:bg-gray-700">
-                                <td scope="row" class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
-                                    {{ $data->id }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $data->name }}
-                                </td>
-                                <td class="hidden px-6 py-4 md:block">
-                                    {{ $data->email }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <p>{{ $data->todos->count() }}
-                                        <span>
-                                            <span
-                                                class="text-green-600 dark:text-green-400">({{ $data->todos->where('is_done', true)->count() }}</span>/
-                                            <span
-                                                class="text-blue-600 dark:text-blue-400">{{ $data->todos->where('is_done', false)->count() }})</span>
-                                        </span>
-                                    </p>
-                                </td>
-                                <td class="px-6 py-4">
-                                </td>
-                            </tr>
+                                            <tr class="odd:bg-white odd:dark:bg-gray-800 even:bg-gray-50 even:dark:bg-gray-700">
+                                                <td scope="row" class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
+                                                    {{ $data->id }}
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    {{ $data->name }}
+                                                </td>
+                                                <td class="hidden px-6 py-4 md:block">
+                                                    {{ $data->email }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <p>{{ $data->todos->count() }}
+                                                        <span>
+                                                            <span
+                                                                class="text-green-600 dark:text-green-400">({{ $data->todos->where('is_done', true)->count() }}</span>/
+                                                            <span
+                                                                class="text-blue-600 dark:text-blue-400">{{ $data->todos->where('is_done', false)->count() }})</span>
+                                                        </span>
+                                                    </p>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <div class="flex flex-wrap justify-center gap-2">
+                                                        {{-- Admin Button --}}
+                                                        <form
+                                                            action="{{ $data->is_admin ? route('user.removeadmin', $data) : route('user.makeadmin', $data) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit"
+                                                                class="text-xs font-semibold px-3 py-1 rounded-md 
+                                {{ $data->is_admin ? 'bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-white' : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-800 dark:text-white' }}">
+                                                                {{ $data->is_admin ? 'Remove Admin' : 'Make Admin' }}
+                                                            </button>
+                                                        </form>
+
+                                                        {{-- Delete Button --}}
+                                                        <form action="{{ route('user.destroy', $data) }}" method="POST"
+                                                            onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="text-xs font-semibold px-3 py-1 rounded-md bg-red-600 text-white hover:bg-red-700 transition">
+                                                                Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+
+
+                                            </tr>
                             @empty
-                            <tr class="odd:bg-white odd:dark:bg-gray-800 even:bg-gray-50 even:dark:bg-gray-700">
-                                <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                                    No data available
-                                </td>
-                            </tr>
+                                <tr class="odd:bg-white odd:dark:bg-gray-800 even:bg-gray-50 even:dark:bg-gray-700">
+                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                        No data available
+                                    </td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>
