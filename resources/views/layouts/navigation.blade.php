@@ -16,13 +16,17 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
+                    
                     <x-nav-link :href="route('todo.index')" :active="request()->routeIs('todo.index')">
                         {{ __('Todo') }}
                     </x-nav-link>
 
+                    @can('admin')
                     <x-nav-link :href="route('user.index')" :active="request()->routeIs('user.index')">
                         {{ __('User') }}
                     </x-nav-link>
+                    @endcan
+
                 </div>
             </div>
 
@@ -87,7 +91,7 @@
                 {{ __('User') }}
             </x-responsive-nav-link>
         </div>
-
+        
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">
