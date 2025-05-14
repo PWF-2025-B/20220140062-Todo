@@ -17,10 +17,9 @@ class TodoFactory extends Factory
     public function definition(): array
     {
         return [
-            //
-            'user_id' => rand(1, 100),
-            'title' => ucwords(fake()->sentence()),
-            'is_done' => rand(0, 1),
+            'user_id' => 1,
+            'title' => $this->faker->sentence,
+            'is_done' => false,
         ];
     }
 }
