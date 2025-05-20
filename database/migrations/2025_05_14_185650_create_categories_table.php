@@ -12,10 +12,10 @@ return new class extends Migration {
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id(); 
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
             $table->timestamps();
         });
-
     }
 
     /**
@@ -23,6 +23,10 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::table('categories', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+        });
+
         Schema::dropIfExists('categories');
     }
 };
